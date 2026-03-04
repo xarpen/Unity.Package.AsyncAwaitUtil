@@ -74,11 +74,6 @@ namespace UnityAsyncAwaitUtil
                 RunIEnumeratorTryCatchExceptionAsync().WrapErrors();
             }
 
-            if (_buttonHandler.Display("Load assetbundle"))
-            {
-                RunAsyncOperationAsync().WrapErrors();
-            }
-
             if (_buttonHandler.Display("Test opening notepad"))
             {
                 RunOpenNotepadTestAsync().WrapErrors();
@@ -173,25 +168,6 @@ namespace UnityAsyncAwaitUtil
         {
             await new WaitForSeconds(1.5f);
             throw new Exception("asdf");
-        }
-
-        async Task RunAsyncOperationAsync()
-        {
-            await InstantiateAssetBundleAsync(AssetBundleSampleUrl, AssetBundleSampleAssetName);
-        }
-
-        async Task InstantiateAssetBundleAsync(string abUrl, string assetName)
-        {
-            // We could use WWW here too which might be easier
-            Debug.Log("Downloading asset bundle data...");
-            var assetBundle = await AssetBundle.LoadFromMemoryAsync(
-                                                                    await DownloadRawDataAsync(abUrl));
-
-            var prefab = (GameObject)(await assetBundle.LoadAssetAsync<GameObject>(assetName));
-
-            GameObject.Instantiate(prefab);
-            assetBundle.Unload(false);
-            Debug.Log("Asset bundle instantiated");
         }
 
         async Task<byte[]> DownloadRawDataAsync(string url)
